@@ -100,7 +100,6 @@ public abstract class PlayerMixin implements PlayerJumpAccess {
         Vec3 motion = player.getDeltaMovement();
         player.setDeltaMovement(motion.x(), jumpBoost, motion.z());
         DoubleJumpNetworking.sendJumpBoostPacket((ServerPlayer) player,jumpBoost);
-        System.out.println("Sent jump boost packet: " + jumpBoost);
         hasDoubleJumped = true;
     }
 }

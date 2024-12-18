@@ -5,10 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,18 +18,21 @@ public class DoubleJumpConfig {
     public Map<String, Float> lootTables = new HashMap<>();
 
     public DoubleJumpConfig() {
-        lootTables.put("minecraft:chests/woodland_mansion", 5.0f);
+
     }
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH = FabricLoader.getInstance()
             .getConfigDirectory().toPath()
-            .resolve("double_jump.json");
+            .resolve("double_jump-config.json");
+
+    private static final ResourceLocation DEFAULT_CONFIG_LOCATION =
+            new ResourceLocation("double_jump", "config/default_config.json");
 
     public static DoubleJumpConfig load() {
         try {
             if (!CONFIG_PATH.toFile().exists()) {
-                DoubleJumpConfig defaultConfig = new DoubleJumpConfig();
+                DoubleJumpConfig defaultConfig = loadDefaultConfig();
                 save(defaultConfig);
                 return defaultConfig;
             }
@@ -43,6 +47,30 @@ public class DoubleJumpConfig {
         }
     }
 
+    private static DoubleJumpConfig loadDefaultConfig() {
+        String githubUrl = "https://raw.githubusercontent.com/<your-username>/<your-repo>/main/assets/double_jump/config/default_config.json";
+
+        try {
+            System.out.println("Fetching default config from: " + githubUrl);
+            URL url = new URL(githubUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            if (connection.getResponseCode() != 200) {
+                throw new IOException("Failed to fetch default config: HTTP " + connection.getResponseCode());
+            }
+
+            try (InputStream inputStream = connection.getInputStream();
+                 Reader reader = new InputStreamReader(inputStream)) {
+                Type configType = new TypeToken<DoubleJumpConfig>() {}.getType();
+                return GSON.fromJson(reader, configType);
+            }
+        } catch (IOException e) {
+            System.err.println("Could not load default config from GitHub: " + e.getMessage());
+            return new DoubleJumpConfig();
+        }
+    }
+
     public static void save(DoubleJumpConfig config) {
         try (Writer writer = new FileWriter(CONFIG_PATH.toFile())) {
             GSON.toJson(config, writer);
@@ -51,14 +79,4 @@ public class DoubleJumpConfig {
         }
     }
 
-    public void modifyLootTables() {
-        for (Map.Entry<String, Float> entry : lootTables.entrySet()) {
-            try {
-                ResourceLocation lootTableId = ResourceLocation.tryParse(entry.getKey());
-                System.out.println("Modifying loot table: " + lootTableId + " with weight: " + entry.getValue() + "%");
-            } catch (Exception e) {
-                System.err.println("Error processing loot table: " + entry.getKey());
-            }
-        }
-    }
 }

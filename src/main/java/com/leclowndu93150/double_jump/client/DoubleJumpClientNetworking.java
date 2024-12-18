@@ -18,7 +18,6 @@ public class DoubleJumpClientNetworking {
             double jumpBoost = buf.readDouble();
             client.execute(() -> {
                 if(client.player != null){
-                    System.out.println("Received jump boost: " + jumpBoost);
                     Vec3 motion = client.player.getDeltaMovement();
                     client.player.setDeltaMovement(motion.x, jumpBoost, motion.z);
                 }
