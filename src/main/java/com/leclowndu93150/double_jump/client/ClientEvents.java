@@ -8,8 +8,13 @@ public class ClientEvents {
     private static boolean lastJumpState = false;
 
     public static void registerKeyHandlers() {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.player != null) {
+
+                if(client.player.onGround()) {
+                    lastJumpState = false;
+                }
+
                 boolean isJumpKeyPressed = client.options.keyJump.isDown();
 
                 if (isJumpKeyPressed && !lastJumpState && !client.player.onGround()) {

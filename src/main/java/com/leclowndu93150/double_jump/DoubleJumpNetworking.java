@@ -13,7 +13,6 @@ public class DoubleJumpNetworking {
             server.execute(() -> {
                 if (player instanceof ServerPlayer) {
                     ((PlayerJumpAccess) player).setJumpKeyPressed(jumpKeyPressed);
-                    System.out.println("Received jump key state from client: " + jumpKeyPressed);
                 }
             });
         });

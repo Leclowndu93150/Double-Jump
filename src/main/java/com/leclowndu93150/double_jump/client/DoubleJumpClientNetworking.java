@@ -10,6 +10,5 @@ public class DoubleJumpClientNetworking {
         FriendlyByteBuf buf = new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()));
         buf.writeBoolean(isPressed);
         ClientPlayNetworking.send(DoubleJumpNetworking.JUMP_PACKET_ID, buf);
-        System.out.println("Sent jump key state to server: " + isPressed);
     }
 }

@@ -45,6 +45,7 @@ public abstract class PlayerMixin implements PlayerJumpAccess {
 
         if (player.onGround()) {
             hasDoubleJumped = false;
+            jumpKeyPressed = false;
         }
 
         if (enchantmentLevel > 0 && !player.onGround() && !hasDoubleJumped && jumpKeyPressed) {
@@ -95,6 +96,7 @@ public abstract class PlayerMixin implements PlayerJumpAccess {
 
         Vec3 motion = player.getDeltaMovement();
         player.setDeltaMovement(motion.x(), motion.y() + jumpBoost, motion.z());
+        System.out.println("Double Jumped");
         hasDoubleJumped = true;
     }
 }
