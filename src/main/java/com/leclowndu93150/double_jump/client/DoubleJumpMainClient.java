@@ -7,5 +7,6 @@ public class DoubleJumpMainClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientEvents.registerKeyHandlers();
+        DoubleJumpClientNetworking.registerClientReceiver();
     }
 }

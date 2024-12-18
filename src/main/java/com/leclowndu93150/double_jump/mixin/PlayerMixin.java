@@ -1,9 +1,12 @@
 package com.leclowndu93150.double_jump.mixin;
 
+import com.leclowndu93150.double_jump.DoubleJumpNetworking;
 import com.leclowndu93150.double_jump.PlayerJumpAccess;
 import com.leclowndu93150.double_jump.DoubleJumpEnchantment;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -96,8 +99,8 @@ public abstract class PlayerMixin implements PlayerJumpAccess {
 
         Vec3 motion = player.getDeltaMovement();
         player.setDeltaMovement(motion.x(), jumpBoost, motion.z());
-
-        System.out.println("Applied double jump boost: " + jumpBoost);
+        DoubleJumpNetworking.sendJumpBoostPacket((ServerPlayer) player,jumpBoost);
+        System.out.println("Sent jump boost packet: " + jumpBoost);
         hasDoubleJumped = true;
     }
 }

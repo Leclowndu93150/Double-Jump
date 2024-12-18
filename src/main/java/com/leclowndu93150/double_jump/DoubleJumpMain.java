@@ -4,11 +4,14 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
+import net.minecraft.world.level.storage.loot.functions.SetNbtFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
@@ -29,12 +32,18 @@ public class DoubleJumpMain implements ModInitializer {
                 if (id.equals(lootTableId)) {
                     Float chance = CONFIG.lootTables.get(lootTableStr) / 100f;
 
+                    CompoundTag enchantmentTag = new CompoundTag();
+                    enchantmentTag.putString("id", "double_jump:double_jump");
+                    int level = 1 + (int)(Math.random() * 3);
+                    enchantmentTag.putInt("lvl", level);
+
+                    CompoundTag bookTag = new CompoundTag();
+                    bookTag.put("StoredEnchantments", new ListTag());
+                    bookTag.getList("StoredEnchantments", 10).add(enchantmentTag);
+
                     LootPool.Builder poolBuilder = LootPool.lootPool()
                             .add(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
-                                    .apply(EnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(1, 1))
-                                            .allowTreasure()
-                                    )
-                            )
+                                    .apply(SetNbtFunction.setTag(bookTag)))
                             .when(LootItemRandomChanceCondition.randomChance(chance));
 
                     tableBuilder.pool(poolBuilder.build());
