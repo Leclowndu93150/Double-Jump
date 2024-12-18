@@ -4,6 +4,7 @@
   "package": "com.leclowndu93150.double_jump.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ExperienceOrbMixin",
     "PlayerMixin"
   ],
   "injectors": {

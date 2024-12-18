@@ -8,6 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetNbtFunction;
@@ -19,6 +21,7 @@ public class DoubleJumpMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ExperienceConfig.load();
         DoubleJumpNetworking.registerServerReceiver();
         Registry.register(BuiltInRegistries.ENCHANTMENT, new ResourceLocation("double_jump", "double_jump"),
                 DoubleJumpEnchantment.DOUBLE_JUMP
