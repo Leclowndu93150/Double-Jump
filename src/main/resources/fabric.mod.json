@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "double_jump",
+  "version": "${version}",
+  "name": "Double Jump",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/double_jump/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.leclowndu93150.double_jump.client.DoubleJumpMainClient"
+    ],
+    "main": [
+      "com.leclowndu93150.double_jump.DoubleJumpMain"
+    ]
+  },
+  "mixins": [
+    "double_jump.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
