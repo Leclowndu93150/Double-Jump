@@ -1,6 +1,7 @@
 package com.leclowndu93150.double_jump.mixin;
 
 import com.leclowndu93150.double_jump.PlayerJumpAccess;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import com.leclowndu93150.double_jump.DoubleJumpEnchantment;
@@ -32,19 +33,19 @@ public abstract class PlayerMixin implements PlayerJumpAccess {
     private void onTick(CallbackInfo ci) {
         Player player = (Player) (Object) this;
 
-        int enchantLevel = EnchantmentHelper.getEnchantmentLevel(
+        int enchantLevel = EnchantmentHelper.getItemEnchantmentLevel(
                 DoubleJumpEnchantment.DOUBLE_JUMP,
-                player
+                player.getItemBySlot(EquipmentSlot.FEET)
         );
 
         if (player.onGround()) {
             hasPerformedDoubleJump = false;
         }
 
-        if (enchantLevel > 0 && !player.onGround() && !hasPerformedDoubleJump) {
-            if (jumpKeyPressed) {
-                performDoubleJump(player, enchantLevel);
-            }
+        if (enchantLevel > 0 && !player.onGround() && !hasPerformedDoubleJump && jumpKeyPressed) {
+            performDoubleJump(player, enchantLevel);
+            System.out.println("Performed double jump");
+            jumpKeyPressed = false;
         }
     }
 
@@ -63,7 +64,5 @@ public abstract class PlayerMixin implements PlayerJumpAccess {
         );
 
         hasPerformedDoubleJump = true;
-
-        jumpKeyPressed = false;
     }
 }

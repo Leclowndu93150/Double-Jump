@@ -11,10 +11,12 @@ public class ClientEvents {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player != null) {
                 boolean isJumpKeyPressed = client.options.keyJump.isDown();
-                if (isJumpKeyPressed != lastJumpState) {
-                    DoubleJumpClientNetworking.sendJumpKeyState(isJumpKeyPressed);
-                    lastJumpState = isJumpKeyPressed;
+
+                if (isJumpKeyPressed && !lastJumpState && !client.player.onGround()) {
+                    DoubleJumpClientNetworking.sendJumpKeyState(true);
                 }
+
+                lastJumpState = isJumpKeyPressed;
             }
         });
     }
