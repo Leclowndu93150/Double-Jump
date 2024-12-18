@@ -89,14 +89,15 @@ public abstract class PlayerMixin implements PlayerJumpAccess {
         }
 
         double jumpBoost = switch (enchantmentLevel) {
-            case 2 -> 0.5;
-            case 3 -> 0.75;
-            default -> 0.3;
+            case 2 -> 0.75;
+            case 3 -> 1.0;
+            default -> 0.6;
         };
 
         Vec3 motion = player.getDeltaMovement();
-        player.setDeltaMovement(motion.x(), motion.y() + jumpBoost, motion.z());
-        System.out.println("Double Jumped");
+        player.setDeltaMovement(motion.x(), jumpBoost, motion.z());
+
+        System.out.println("Applied double jump boost: " + jumpBoost);
         hasDoubleJumped = true;
     }
 }
