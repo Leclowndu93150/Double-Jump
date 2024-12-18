@@ -32,12 +32,15 @@ public class DoubleJumpMain implements ModInitializer {
 
                     CompoundTag enchantmentTag = new CompoundTag();
                     enchantmentTag.putString("id", "double_jump:double_jump");
-                    int level = 1 + (int)(Math.random() * 3);
+                    //int level = 1 + (int)(Math.random() * 3);
+                    int level = 1;
                     enchantmentTag.putInt("lvl", level);
 
+                    ListTag storedEnchantmentsList = new ListTag();
+                    storedEnchantmentsList.add(enchantmentTag);
+
                     CompoundTag bookTag = new CompoundTag();
-                    bookTag.put("StoredEnchantments", new ListTag());
-                    bookTag.getList("StoredEnchantments", 10).add(enchantmentTag);
+                    bookTag.put("StoredEnchantments", storedEnchantmentsList);
 
                     LootPool.Builder poolBuilder = LootPool.lootPool()
                             .add(LootItem.lootTableItem(Items.ENCHANTED_BOOK)

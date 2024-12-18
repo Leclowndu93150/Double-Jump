@@ -2,6 +2,8 @@ package com.leclowndu93150.double_jump;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +50,7 @@ public class DoubleJumpConfig {
     }
 
     private static DoubleJumpConfig loadDefaultConfig() {
-        String githubUrl = "https://raw.githubusercontent.com/<your-username>/<your-repo>/main/assets/double_jump/config/default_config.json";
+        String githubUrl = "https://raw.githubusercontent.com/Leclowndu93150/Double-Jump/refs/heads/master/src/main/resources/config/default_config.json";
 
         try {
             System.out.println("Fetching default config from: " + githubUrl);
@@ -62,8 +64,19 @@ public class DoubleJumpConfig {
 
             try (InputStream inputStream = connection.getInputStream();
                  Reader reader = new InputStreamReader(inputStream)) {
-                Type configType = new TypeToken<DoubleJumpConfig>() {}.getType();
-                return GSON.fromJson(reader, configType);
+
+                JsonObject jsonObject = GSON.fromJson(reader, JsonObject.class);
+
+                JsonObject lootTablesJson = jsonObject.getAsJsonObject("lootTables");
+
+                Map<String, Float> uniqueLootTables = new HashMap<>();
+                for (Map.Entry<String, JsonElement> entry : lootTablesJson.entrySet()) {
+                    uniqueLootTables.put(entry.getKey(), entry.getValue().getAsFloat());
+                }
+
+                DoubleJumpConfig config = new DoubleJumpConfig();
+                config.lootTables = uniqueLootTables;
+                return config;
             }
         } catch (IOException e) {
             System.err.println("Could not load default config from GitHub: " + e.getMessage());
